@@ -1,0 +1,21 @@
+Registering torchbots...
+--seed 968939823
+Final score 0 : 25 bomb: 0
+Over 1 games, SearchBot scored an average of 25 points per game.
+  100 percent were perfect games.
+  Mulligans used: 0 (0%); 1 (100%); 2 (0%); 3 (0%).
+Final score 1 : 17 bomb: 1
+SearchBot changed 7 moves, gaining 2.20268 points. Total search iters: 99785
+Final score 2 : 21 bomb: 0
+SearchBot changed 11 moves, gaining 3.80846 points. Total search iters: 119560
+Final score 3 : 23 bomb: 0
+SearchBot changed 7 moves, gaining 1.6144 points. Total search iters: 93264
+Final score 4 : 21 bomb: 0
+SearchBot changed 11 moves, gaining 3.04033 points. Total search iters: 93165
+Final score 5 : 23 bomb: 0
+SearchBot changed 9 moves, gaining 3.97951 points. Total search iters: 100707
+Final score 6 : 23 bomb: 0
+SearchBot changed 11 moves, gaining 3.29811 points. Total search iters: 106392
+Final score 7 : 22 bomb: 0
+SearchBot changed 12 moves, gaining 4.22588 points. Total search iters: 111269
+Final score 8 : 20 bomb: 0

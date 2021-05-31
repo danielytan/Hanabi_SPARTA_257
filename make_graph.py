@@ -1,74 +1,129 @@
 #!/usr/bin/env python3
 
-# Copyright (c) Facebook, Inc. and its affiliates.
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
+# Custom code to produce graphs to compare average scores and perfect game rates 
+# of various blueprint policies with and without search techniques from SPARTA.
 
-import os
-import sys
-import torch
 import math
+import numpy as np
+import matplotlib.pyplot as plt
 
 """
-A little utility script to accumulate average scores from logs across multiple runs
+A little utility script to create graphs for results from accum_scores
 """
 
-def calc_scores(filenames):
-    scores = []
-    num_moves = []
-    expected_delta = []
-    expected_delta_win = []
+def experiment_avg_score():
+    plt.figure()
+    labels = ['SmartBot', 'SAD']
+    nosearch_means = [23.048, 24.076]
+    singleagent_means = [23.9393, 24.72]
 
-    scores_bomb0 = scores[:]
-    num_bombs = 0
-    my_expected_delta = 0
-    my_expected_delta_win = 0
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
 
-    for filename in filenames:
-        og, eg = 0, 0
-        for line in open(filename, 'r'):
-            fields = line.split()
-            if 'Final score' in line:
-                score, bomb = int(fields[4]), int(fields[6])
-                scores.append(score)
-                scores_bomb0.append(0 if bomb else score)
-                num_bombs += 1 if bomb else 0
-                expected_delta.append(my_expected_delta)
-                expected_delta_win.append(my_expected_delta_win)
-                my_expected_delta = 0
-                my_expected_delta_win = 0
-            if 'changed' in line:
-                num_moves.append(float(fields[-1]))
-                my_expected_delta += float(fields[5])
-                #expected_delta.append(float(fields[5]))
-                if len(fields) > 14:
-                    my_expected_delta_win += float(fields[11])
-                    #expected_delta_win.append(float(fields[11]))
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, nosearch_means, width, label='No Search')
+    rects2 = ax.bar(x + width/2, singleagent_means, width, label='Single-Agent Search')
 
-    scores = torch.Tensor(scores)
-    scores_bomb0 = torch.Tensor(scores_bomb0)
-    num_moves = torch.Tensor(num_moves)
-    expected_delta = torch.Tensor(expected_delta)
-    expected_delta_win = torch.Tensor(expected_delta_win)
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Average Scores')
+    ax.set_xlabel('Blueprint Policies')
+    ax.set_title('Average scores by blueprint policy')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend(loc="lower left")
 
-    N = scores.nelement()
-    win_frac = scores.eq(25).float().mean()
-    print(os.getcwd())
-    print("Count: %g    Score: %g +/- %g    Win: %g +/- %g" % (N, scores.mean(), scores.std() / math.sqrt(N), win_frac, math.sqrt(win_frac * (1 - win_frac) / N)))
-    print("# moves: %g  Expected delta: %g +/- %g  Win: %g +/- %g" % (num_moves.mean(), expected_delta.mean(), expected_delta.std() / math.sqrt(N), expected_delta_win.mean(), expected_delta_win.std() / math.sqrt(N)))
-    print("Bomb0 Score: %g +/- %g    bomb: %g%% (%d / %d)" % (scores_bomb0.mean(), scores_bomb0.std() / math.sqrt(N), num_bombs / N * 100, num_bombs, N))
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
+
+    fig.tight_layout()
+    plt.savefig('figures/experiment_average_scores.png')
+
+def experiment_perfect_game_percent():
+    plt.figure()
+    labels = ['SmartBot', 'SAD']
+    nosearch_perfect_rates = [29.32, 56.54]
+    singleagent_perfect_rates = [57.91, 69.12]
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, nosearch_perfect_rates, width, label='No Search')
+    rects2 = ax.bar(x + width/2, singleagent_perfect_rates, width, label='Single-Agent Search')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Perfect Game %')
+    ax.set_xlabel('Blueprint Policies')
+    ax.set_title('Perfect game % by blueprint policy')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
+
+    fig.tight_layout()
+    plt.savefig('figures/experiment_perfect_game_rates.png')
+
+def extension_avg_score():
+    plt.figure()
+    labels = ['HolmesBot', 'SimpleBot', 'SmartBot']
+    nosearch_means = [20.637, 16.905, 23.048]
+    singleagent_means = [22.9286, 0, 23.9393]
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, nosearch_means, width, label='No Search')
+    rects2 = ax.bar(x + width/2, singleagent_means, width, label='Single-Agent Search')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Average Scores')
+    ax.set_xlabel('Blueprint Policies')
+    ax.set_title('Average scores by blueprint policy')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
+
+    fig.tight_layout()
+    plt.savefig('figures/extension_average_scores.png')
+
+def extension_perfect_game_percent():
+    plt.figure()
+    labels = ['HolmesBot', 'SimpleBot', 'SmartBot']
+    nosearch_perfect_rates = [4.80, 0, 29.32]
+    singleagent_perfect_rates = [23.81, 0, 57.91]
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, nosearch_perfect_rates, width, label='No Search')
+    rects2 = ax.bar(x + width/2, singleagent_perfect_rates, width, label='Single-Agent Search')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Perfect Game %')
+    ax.set_xlabel('Blueprint Policies')
+    ax.set_title('Perfect game % by blueprint policy')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
+
+    fig.tight_layout()
+    plt.savefig('figures/extension_perfect_game_rates.png')
+
+def make_graphs():
+    experiment_avg_score()
+    experiment_perfect_game_percent()
+    extension_avg_score()
+    extension_perfect_game_percent()
 
 if __name__ == "__main__":
-    paths = sys.argv[1:]
-    files = []
-    for path in paths:
-        if os.path.isdir(path):
-            for filename in os.listdir(path):
-                if filename.startswith('task') and filename.endswith('.out'):
-                    files.append(path + '/' + filename)
-        else:
-            files.append(path)
-
-    calc_scores(files)
+    make_graphs()

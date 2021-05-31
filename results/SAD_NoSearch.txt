@@ -1,0 +1,3 @@
+Count: 1000    Score: 24.138 +/- 0.0428812    Win: 0.565 +/- 0.0156772
+# moves: nan  Expected delta: 0 +/- 0  Win: 0 +/- 0
+Bomb0 Score: 24.094 +/- 0.0573101    bomb: 0.3% (3 / 1000)

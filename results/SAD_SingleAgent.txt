@@ -1,0 +1,7 @@
+Registering torchbots...
+--seed 474992568
+Final score 0 : 25 bomb: 0
+Over 1 games, SearchBot scored an average of 25 points per game.
+  100 percent were perfect games.
+  Mulligans used: 0 (0%); 1 (100%); 2 (0%); 3 (0%).
+Final score 1 : 25 bomb: 0
